@@ -20,6 +20,12 @@ public:
   // Get all inputs except id;
   void addData(int rk4Id, double * rk4data);
   void getAndremoveData(int & rk4Id, double * rk4array);
+
+  int transformIntoRawData(int * rk4Ids, double * rk4arrays, int rk4Id_size, 
+			    int rk4array_sizeWithPadding);
+  int addRawDataIntoFIFO(int * rk4Ids, double * rk4arrays, int rk4Id_size,
+			  int rk4array_sizeWithPadding);
+
 			
   
 private :

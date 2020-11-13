@@ -169,3 +169,96 @@ double *rk4_f ( double t, int n, double u[] )
  
   return uprime;
 }
+
+
+
+//****************************************************************************80
+
+void rk4_API_onStack (int id, double t0, double x0, double v0, double tmax, double dt,
+		      double & x1, double & v1)
+
+//****************************************************************************80
+//
+//  Purpose:
+//
+//    RK4_API launchs the RK4 routine for a vector ODE.
+//
+//  Licensing:
+//
+//    This code is distributed under the GNU LGPL license. 
+//
+{
+  double t1;
+  double u0[2];
+  u0[0] = x0;
+  u0[1] = v0;
+  double u1[2];
+  int i;
+  int n = 2;
+
+  for ( ; ; )
+  {
+
+//
+//  Stop if we've exceeded TMAX.
+//
+    if ( tmax <= t0 )
+    {
+      break;
+    }
+//
+//  Otherwise, advance to time T1, and have RK4 estimate 
+//  the solution U1 there.
+//
+    t1 = t0 + dt;
+
+    rk4vec_2d_onStack ( t0, u0, dt, rk4_f_2d_onStack, u1[0], u1[1]);
+//
+//  Shift the data to prepare for another step.
+//
+    t0 = t1;
+    for ( i = 0; i < n; i++ )
+    {
+      u0[i] = u1[i];
+    }
+  }
+
+
+    // Assign output
+    x1 = u0[0];
+    v1 = u0[1];
+    
+  return;
+}
+
+
+//****************************************************************************80
+
+void rk4_f_2d_onStack ( double t, double u0, double u1, double & uprime0, double & uprime1)
+
+//****************************************************************************80
+//
+//  Purpose:
+//
+//    RK4_F evaluates the right hand side of a vector ODE.
+//
+//  Licensing:
+//
+//    This code is distributed under the GNU LGPL license. 
+//
+//
+//  Parameters:
+//
+//    Input, double T, the current time.
+//
+//
+//    Input, double U[N], the current solution value.
+//
+//    Output, double RK4_F[N], the value of the derivative, dU/dT.
+//
+{
+
+  uprime0 =   u1;
+  uprime1 = - u0;
+ 
+}
